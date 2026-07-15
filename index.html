@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Book Digital SOP Perizinan Nakes - PMPTSP Kota Medan</title>
+    <style>
+        /* CSS RESET & VARIABEL UTAMA */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #0f172a; 
+            --brand: #1e40af; 
+            --brand-light: #eff6ff;
+            --accent: #e11d48; 
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #334155;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+        }
+
+        .ebook-wrapper {
+            width: 100%;
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* HEADER & IDENTITAS */
+        .main-header {
+            background: linear-gradient(135deg, #1e40af 0%, #0f172a 100%);
+            color: #ffffff;
+            padding: 24px;
+            border-radius: 12px 12px 0 0;
+            text-align: center;
+        }
+
+        .main-header h1 { font-size: 16px; letter-spacing: 1px; font-weight: 700; text-transform: uppercase; }
+        .main-header p { font-size: 12px; color: #93c5fd; margin-top: 4px; }
+
+        .pdf-download-btn {
+            background-color: #ffeaec;
+            color: var(--accent);
+            border: 1px solid #fecdd3;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .pdf-download-btn:hover { background-color: var(--accent); color: white; }
+
+        /* NAVIGASI MENU HALAMAN */
+        .page-navigation {
+            background-color: #ffffff;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            padding: 0 8px;
+        }
+        .page-navigation::-webkit-scrollbar { display: none; }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            padding: 14px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        .nav-btn.active {
+            color: var(--brand);
+            border-bottom-color: var(--brand);
+            background-color: #f8fafc;
+        }
+
+        /* AREA BUKU (KONTEN HALAMAN) */
+        .ebook-page {
+            background-color: var(--bg-card);
+            padding: 28px 20px;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            min-height: 450px;
+            display: none;
+        }
+        .ebook-page.active { display: block; }
+
+        /* KHUSUS HALAMAN COVER GAMBAR */
+        .ebook-page.cover-page-active {
+            padding: 0 !important;
+            overflow: hidden;
+            background-color: #051636;
+        }
+
+        .cover-image-container {
+            width: 100%;
+            height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cover-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .page-num {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-align: right;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        h2 { color: var(--primary); margin-bottom: 18px; font-size: 24px; font-weight: 700; }
+        p { margin-bottom: 16px; text-align: justify; }
+
+        /* EMBEDDED DRIVE VIDEO PLAYER */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* Rasio Aspek 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            margin: 25px 0;
+            background-color: #000000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* FORMAT TABEL KLASTER & BADGE */
+        .klaster-group { display: flex; gap: 20px; margin-top: 15px; flex-direction: column; }
+        .klaster-box { flex: 1; background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        
+        .badge-time {
+            background: linear-gradient(135deg, #fef2f2 0%, #fff1f2 100%);
+            border-left: 5px solid var(--accent); padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0;
+        }
+        .badge-time h4 { color: var(--accent); font-size: 22px; font-weight: 800; }
+        .badge-time strong { color: #9f1239; font-size: 14px; display: block; text-transform: uppercase; }
+
+        .list-numbered { list-style: none; margin: 20px 0; }
+        .list-numbered li { display: flex; margin-bottom: 14px; background: #f8fafc; padding: 12px 16px; border-radius: 8px; border: 1px solid #f1f5f9; }
+        .list-numbered .num {
+            background-color: var(--brand); color: white; min-width: 26px; height: 26px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; margin-right: 14px; margin-top: 2px;
+        }
+
+        .pustaka-list { margin-left: 20px; margin-top: 15px; }
+        .pustaka-list li { margin-bottom: 12px; }
+
+        .page-footer-nav { display: flex; justify-content: space-between; margin-top: 25px; padding: 10px 4px; }
+        .action-btn {
+            background-color: var(--brand); color: white; border: none; padding: 12px 24px;
+            border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .action-btn:disabled { background-color: #cbd5e1; cursor: not-allowed; }
+
+        .toc-list { list-style: none; margin-top: 20px; }
+        .toc-list li { 
+            padding: 14px 18px; background: #f8fafc; margin-bottom: 10px; border-radius: 8px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0;
+        }
+        .toc-list li:hover { border-color: var(--brand); background: var(--brand-light); color: var(--brand); }
+
+        @media (min-width: 768px) {
+            .ebook-wrapper { padding: 40px 20px; }
+            .ebook-page { padding: 50px 40px; }
+            .klaster-group { flex-direction: row; }
+            .ebook-page.cover-page-active { padding: 0 !important; }
+        }
+
+        @media print {
+            body { background-color: #ffffff; color: #000000; }
+            .main-header { background: #1e40af !important; color: #ffffff !important; }
+            .pdf-download-btn, .page-navigation, .page-footer-nav, .video-container { display: none !important; } 
+            .ebook-page { display: block !important; page-break-after: always; box-shadow: none; padding: 30px 0; border-bottom: 1px solid #e2e8f0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ebook-wrapper">
+        
+        <header class="main-header">
+            <h1>Dinas PMPTSP Kota Medan</h1>
+            <p>Sistem Informasi Pelayanan Perizinan Terpadu Satu Pintu</p>
+            <button class="pdf-download-btn" onclick="window.print()">
+                📄 Cetak / Simpan Ke PDF
+            </button>
+        </header>
+
+        <nav class="page-navigation" id="pageNav">
+            <button class="nav-btn active" onclick="bukaHalaman(0)">Cover</button>
+            <button class="nav-btn" onclick="bukaHalaman(1)">Daftar Isi</button>
+            <button class="nav-btn" onclick="bukaHalaman(2)">Bab 1</button>
+            <button class="nav-btn" onclick="bukaHalaman(3)">Bab 2</button>
+            <button class="nav-btn" onclick="bukaHalaman(4)">Bab 3</button>
+            <button class="nav-btn" onclick="bukaHalaman(5)">Bab 4</button>
+            <button class="nav-btn" onclick="bukaHalaman(6)">Bab 5</button>
+            <button class="nav-btn" onclick="bukaHalaman(7)">Bab 6</button>
+            <button class="nav-btn" onclick="bukaHalaman(8)">Pustaka</button>
+        </nav>
+
+        <!-- HALAMAN 1: COVER ASLI -->
+        <div class="ebook-page cover-page-active active">
+            <div class="cover-image-container">
+                <img src="cover.png" alt="Cover E-Book Digital" class="cover-img">
+            </div>
+        </div>
+
+        <!-- HALAMAN 2: DAFTAR ISI -->
+        <div class="ebook-page">
+            <div class="page-num">Halaman 2</div>
+            <h2>Daftar Isi Panduan</h2>
+            <ul class="toc-list">
+                <li onclick="bukaHalaman(2)"><span>01 Pendahuluan Panduan Perizinan</span> <strong>Hal 3</strong></li>
+                <li onclick="bukaHalaman(3)"><span>02 Kategori dan Jenis Perizinan Kesehatan</span> <strong>Hal 4</strong></li>
+                <li onclick="bukaHalaman(4)"><span>03 SOP & Durasi Pengurusan SIP</span> <strong>Hal 5</strong></li>
+                <li onclick="bukaHalaman(5)"><span>04 Persyaratan Lengkap Dokumen SIP</span> <strong>Hal 6</strong></li>
+                <li onclick="bukaHalaman(6)"><span>05 Prosedur Pencabutan SIP & Apoteker</span> <strong>Hal 7</strong></li>
+                <li onclick="bukaHalaman(7)"><span>06 Alur Tahapan Pemrosesan Sistematis</span> <strong>Hal 8</strong></li>
+                <li onclick="bukaHalaman(8)"><span>07 Daftar Pustaka Regulasi</span> <strong>Hal 9</strong></li>
+            </ul>
+        </div>
+
+        <!-- HALAMAN 3: BAB 1 -->
+        <div class="ebook-page">
+            <div class="page-num">Halaman 3</div>
+            <span style="color:var(--brand); font-weight:700; font-size:14px; text-transform:uppercase;">Bab 01</span>
+            <h2>Pendahuluan</h2>
+            <p>E-book digital ini dirancang khusus untuk memuat informasi komprehensif mengenai Standar Operasional Prosedur (SOP) serta regulasi persyaratan perizinan resmi bagi tenaga medis dan tenaga kesehatan yang berpraktik di wilayah administratif Kota Medan.</p>
+            
+            <p style="font-weight: 600; margin-bottom: 8px; color: var(--primary);">🎥 Video Tutorial Panduan:</p>
+            
+            <div class="video-container">
+                <iframe 
+                    src="https://drive.google.com/file/d/1QAJh7xWO5wmF1xbvseMdyExTvOaNysNT/preview" 
+                    loading="lazy"
+                    allow="autoplay; encrypted-media" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <!-- HALAMAN 4: BAB 2 -->
+        <div class="ebook-page">
+            <div class="page-num">Halaman 4</div>
+            <span style="color:var(--brand); font-weight:700; font-size:14px; text-transform:uppercase;">Bab 02</span>
+            <h2>Jenis Perizinan Kesehatan</h2>
+            <p>Berdasarkan keputusan dan ketetapan teknis pelayanan, terdapat 2 (dua) klaster jenis perizinan utama tenaga kesehatan yang diatur dalam ketetapan SOP:</p>
+            
+            <div class="klaster-group">
+                <div class="klaster-box">
+                    <strong style="color:var(--brand)">1. SIP Tenaga Medis & Kesehatan</strong>
+                    <p style="font-size: 14px; margin-top:8px; color:var(--text-muted);">Surat Izin Praktik legalitas operasional utama dokter, perawat, bidan, dan tenaga medis lain untuk memberikan layanan kesehatan langsung.</p>
+                </div>
+                <div class="klaster-box">
+                    <strong style="color:var(--brand)">2. Pencabutan SIP & Apoteker</strong>
+                    <p style="font-size: 14px; margin-top:8px; color:var(--text-muted);">Prosedur resmi penutupan atau penarikan berkas izin praktik karena perpindahan domisili faskes tugas atau selesai masa kontrak kerja.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- HALAMAN 5: BAB 3 -->
+        <div class="ebook-page">
+            <div class="page-num">Halaman 5</div>
+            <span style="color:var(--brand); font-weight:700; font-size:14px; text-transform:uppercase;">Bab 03</span>
+            <h2>SOP & Durasi Pengurusan SIP</h2>
+            <p>Surat Izin Praktik (SIP) dipersyaratkan mutlak secara hukum bagi tenaga medis agar memiliki hak kewenangan klinis penuh dalam melakukan tindakan medis operasional sesuai kompetensi masing-masing profesi.</p>
+            
+            <div class="badge-time">
+                <h4>5 Hari Kerja</h4>
+                <strong>Standar Waktu Penyelesaian Berkas</strong>
+                <p style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">Dihitung sejak seluruh dokumen administrasi digital diunggah secara lengkap, valid, dan terverifikasi oleh tim teknis.</p>
+            </div>
+        </div>
+
+        <!-- HALAMAN 6: BAB 4 -->
+        <div class="ebook-page">
+            <div class="page-num">Halaman 6</div>
+            <span style="color:var(--brand); font-weight:700; font-size:14px; text-transform:uppercase;">Bab 04</span>
+            <h2>Persyaratan Lengkap Dokumen SIP</h2>
+            <ul class="list-numbered">
+                <li><div class="num">01</div><div>SK Pencabutan SIP lama / Surat keterangan tidak berpraktik dari faskes asal (jika luar Kota Medan).</div></li>
+                <li><div class="num">02</div><div>Scan Asli E-KTP aktif (Nomor Induk Kependudukan wajib terdaftar resmi di basis data SISDMK).</div></li>
+                <li><div class="num">03</div><div>Scan Asli Surat Tanda Registrasi (STR) yang legalisir / E-STR Aktif / Salinan E-STR khusus profesi Dokter.</div></li>
+                <li><div class="num">04</div><div>Scan Asli Surat Keterangan Praktik dari Faskes beserta jadwal praktik.</div></li>
+                <li><div class="num">05</div><div>Pas Foto digital berwarna terbaru ukuran 3x4 cm dengan latar belakang warna merah.</div></li>
+                <li><div class="num">06</div><div>Scan Asli dokumen SIP terdahulu (khusus permohonan perpanjangan maupun perubahan tempat praktik).</div></li>
+                <li><div class="num">07</div><div>Scan Asli SIP aktif lainnya apabila pemohon melakukan pelayanan praktik di lebih dari satu faskes.</div></li>
+                <li><div class="num">08</div><div>Surat izin atasan langsung bagi ASN/PNS aktif untuk praktik luar jam dinas.</div></li>
+                <li><div class="num">09</div><div>Surat pernyataan bermaterai tidak berpraktik melebihi batasan regulasi faskes yang ditentukan.</div></li>
+                <li><div class="num">10</div><div>Sertifikat Kompetensi terbaru (jika STR seumur hidup namun tidak aktif praktik lebih dari 5 tahun berkelanjutan).</div></li>
+                <li><div class="num">11</div><div>Bukti Kecukupan Satuan Kredit Profesi (SKP) resmi terintegrasi (khusus perpanjangan berkas).</div></li>
+                <li><div class="num">12</div><div>Surat pernyataan pertanggungjawaban mutlak bermaterai mengenai pemenuhan jumlah kecukupan SKP.</div></li>
+            </ul>
+        </div>
+
+        <!-- HALAMAN 7: BAB 5 -->
+        <div class="ebook-page">
+            <div class="page-num">Halaman 7</div>
+            <span style="color:var(--brand); font-weight:700; font-size:14px; text-transform:uppercase;">Bab 05</span>
+            <h2>Prosedur Pencabutan SIP & Apoteker</h2>
+            <p>Prosedur penutupan hak administrasi praktik wajib dilakukan oleh nakes demi menjaga akurasi sebaran kuota pelayanan kesehatan.</p>
+            
+            <div class="badge-time">
+                <h4>5 Hari Kerja</h4>
+                <strong>Waktu Penyelesaian TTE Pencabutan</strong>
+            </div>
+
+            <p style="font-weight: 700; margin-bottom: 10px; color: var(--primary);">Berkas Persyaratan Pencabutan:</p>
+            <ul class="list-numbered">
+                <li><div class="num">1</div><div>Fisik atau Dokumen Asli Surat Izin Praktik (SIP) lama yang akan diajukan untuk dicabut.</div></li>
+                <li><div class="num">2</div><div>Scan Kartu Tanda Penduduk Elektronik (E-KTP) pemohon.</div></li>
+                <li><div class="num">3</div><div>Scan Asli Surat Keterangan resmi Berhenti Praktik dari Manajemen Faskes.</div></li>
+                <li><div class="num">4</div><div>Salinan Izin Apotek dari sistem Online Single Submission / OSS (Khusus permohonan penutupan SIP Apoteker).</div></li>
+            </ul>
+        </div>
+
+        <!-- HALAMAN 8: BAB 6 -->
+        <div class="ebook-page">
+            <div class="page-num">Halaman 8</div>
+            <span style="color:var(--brand); font-weight:700; font-size:14px; text-transform:uppercase;">Bab 06</span>
+            <h2>Alur Tahapan Pemrosesan Sistematis</h2>
+            <ul class="list-numbered">
+                <li><div class="num">1</div><div><strong>Tahap Pemohon:</strong> Pengisian form registrasi elektronik dan unggah berkas persyaratan awal.</div></li>
+                <li><div class="num">2</div><div><strong>Sekretaris / Validasi:</strong> Pemeriksaan kelengkapan berkas administratif utama.</div></li>
+                <li><div class="num">3</div><div><strong>Ketua Tim / Verifikasi Awal:</strong> Penilaian substansi kesesuaian keahlian medis serta keaslian STR.</div></li>
+                <li><div class="num">4</div><div><strong>Koordinator PTSP / Verifikasi Akhir:</strong> Persetujuan akhir kelayakan berkas teknis kesehatan.</div></li>
+                <li><div class="num">5</div><div><strong>Ketua Tim / Distribusi Berkas:</strong> Penyerahan draf izin digital ke dalam sistem penandatanganan elektronik.</div></li>
+                <li><div class="num">6</div><div><strong>Kepala Dinas PMPTSP / Penetapan & TTE:</strong> Penerbitan dokumen izin resmi bertanda tangan elektronik (TTE barcode).</div></li>
+            </ul>
+        </div>
+
+        <!-- HALAMAN 9: DAFTAR PUSTAKA -->
+        <div class="ebook-page">
+            <div class="page-num">Halaman 9</div>
+            <span style="color:var(--brand); font-weight:700; font-size:14px; text-transform:uppercase;">Referensi Resmi</span>
+            <h2>Daftar Pustaka</h2>
+            <ol class="pustaka-list">
+                <li>Undang-Undang Republik Indonesia Nomor 17 Tentang Kesehatan mengenai legalitas Surat Tanda Registrasi (STR) dan Surat Izin Praktik (SIP) Tenaga Medis.</li>
+                <li>Peraturan Menteri Kesehatan Republik Indonesia tentang Tata Cara Registrasi dan Perizinan Tenaga Kesehatan.</li>
+                <li>Keputusan Walikota Medan mengenai Kedudukan, Susunan Organisasi, Tugas dan Fungsi, serta Tata Kerja Dinas Penanaman Modal dan Pelayanan Terpadu Satu Pintu Kota Medan.</li>
+                <li>Standar Operasional Prosedur (SOP) Internal Pelayanan Perizinan Terpadu Satu Pintu Kota Medan.</li>
+            </ol>
+        </div>
+
+        <!-- TOMBOL NAVIGASI BAWAH LAYAKNYA BUKU -->
+        <div class="page-footer-nav">
+            <button class="action-btn" id="prevBtn" onclick="geserHalaman(-1)">Kembali</button>
+            <button class="action-btn" id="nextBtn" onclick="geserHalaman(1)">Selanjutnya</button>
+        </div>
+
+    </div>
+
+    <!-- SCRIPT LOGIKA PINDAH HALAMAN -->
+    <script>
+        let indexHalamanAktif = 0;
+        const semuaHalaman = document.querySelectorAll('.ebook-page');
+        const semuaTombolNav = document.querySelectorAll('.nav-btn');
+        const tombolPrev = document.getElementById('prevBtn');
+        const tombolNext = document.getElementById('nextBtn');
+        const barNavigasi = document.getElementById('pageNav');
+
+        function bukaHalaman(index) {
+            indexHalamanAktif = index;
+            semuaHalaman.forEach(hal => hal.classList.remove('active'));
+            semuaTombolNav.forEach(btn => btn.classList.remove('active'));
+            
+            semuaHalaman[indexHalamanAktif].classList.add('active');
+            if(semuaTombolNav[indexHalamanAktif]) semuaTombolNav[indexHalamanAktif].classList.add('active');
+            
+            tombolPrev.disabled = (indexHalamanAktif === 0);
+            tombolNext.disabled = (indexHalamanAktif === semuaHalaman.length - 1);
+
+            const tombolAktif = semuaTombolNav[indexHalamanAktif];
+            if(tombolAktif) {
+                barNavigasi.scrollTo({ left: tombolAktif.offsetLeft - 40, behavior: 'smooth' });
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function geserHalaman(arah) {
+            let targetIndex = indexHalamanAktif + arah;
+            if (targetIndex >= 0 && targetIndex < semuaHalaman.length) { bukaHalaman(targetIndex); }
+        }
+        
+        bukaHalaman(0);
+    </script>
+</body>
+</html>
